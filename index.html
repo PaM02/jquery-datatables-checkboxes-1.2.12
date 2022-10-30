@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="icon" href="img/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Changer login mot de passe</title>
+  <!-- Custom fonts for this template -->
+  <link rel="stylesheet" href="css/dataTables.checkboxes.css" />
+  <link rel="stylesheet" href="css/datatables.min.css" />
+
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/datatables.min.js"></script>
+  
+  <script src="js/dataTables.checkboxes.js"></script>
+  <script src="js/dataTables.checkboxes.min.js"></script>
+
+</head>
+
+<body>
+ <div class="well">   
+<form id="frm-example" action="/path/to/your/script.php" method="POST">
+
+<table id="example" class="display" cellspacing="0" width="100%">
+   <thead>
+      <tr>
+         <th></th>
+         <th>Name</th>
+         <th>Position</th>
+         <th>Office</th>
+         <th>Extn</th>
+
+
+      </tr>
+   </thead>
+   <tfoot>
+      <tr>
+         <th></th>
+         <th>Name</th>
+         <th>Position</th>
+         <th>Office</th>
+         <th>Age</th>
+
+
+      </tr>
+   </tfoot>
+</table>
+
+<hr>
+
+
+<p><button>Submit</button></p>
+
+<p><b>Selected rows data:</b></p>
+<pre id="example-console-rows"></pre>
+
+<p><b>Form data as submitted to the server:</b></p>
+<pre id="example-console-form"></pre>
+
+</form>
+</div>
+</body>
+<script type="text/javascript" language="javascript" >
+$(document).ready(function() {
+   var table = $('#example').DataTable({
+      'ajax': 'php/supervision/fetch.php',
+      'columnDefs': [
+         {
+            'targets': 0,
+            'checkboxes': {
+               'selectRow': true
+            }
+         }
+      ],
+      'select': {
+         'style': 'os'
+      },
+      'order': [[1, 'asc']]
+   });
+   
+   // Handle form submission event 
+   $('#frm-example').on('submit', function(e){
+
+      var form = this;
+      var rows_selected = table.column(0).checkboxes.selected();
+
+      // Iterate over all selected checkboxes
+      $.each(rows_selected, function(index, rowId){
+         // Create a hidden element 
+         $(form).append(
+             $('<input>')
+                .attr('type', 'hidden')
+                .attr('name', 'id[]')
+                .val(rowId)
+         );
+      });
+
+      // FOR DEMONSTRATION ONLY
+      // The code below is not needed in production
+      
+      // Output form data to a console     
+      $('#example-console-rows').text(rows_selected.join(","));
+      
+      // Output form data to a console     
+      $('#example-console-form').text($(form).serialize());
+       
+      // Remove added elements
+      $('input[name="id\[\]"]', form).remove();
+       
+      // Prevent actual form submission
+      e.preventDefault();
+   });   
+});
+</script>
